@@ -1,0 +1,2 @@
+from .hexapod2dofmoveforward import Hexapod2DofMoveForwardEnv
+from .hexapod3dofmoveforward import Hexapod3DofMoveForwardEnv
