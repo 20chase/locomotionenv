@@ -5,19 +5,22 @@ import numpy as np
 
 import gym
 from gym.spaces import Tuple
+from gym import utils
 from gym.utils import EzPickle
 from gym.envs.mujoco import mujoco_env
 
 
 
 
-
-class Hexapod2DofMoveForwardEnv(mujoco_env.MujocoEnv, EzPickle):
+class Hexapod2DofMoveForwardEnv(mujoco_env.MujocoEnv, utils.EzPickle):
 	"""docstring for ClassName"""
 
 	def __init__(self):
-		EzPickle.__init__(self)
-		mujoco_env.MujocoEnv.__init__(self, "hexapod-2dof-moveforward.xml",4)
+		utils.EzPickle.__init__(self)
+		xmlpath = os.path.join(os.path.dirname(__file__), "assets", "hexapod-2dof-moveforward.xml")
+		#mujoco_env.MujocoEnv.__init__(self, "hexapod-2dof-moveforward.xml",4)
+		mujoco_env.MujocoEnv.__init__(self, xmlpath,4)
+		self.viewer = None
 
 
 	def _step(self, a):
@@ -35,6 +38,7 @@ class Hexapod2DofMoveForwardEnv(mujoco_env.MujocoEnv, EzPickle):
 
 
 		reward = forward_reward - ctrl_cost - contact_cost + survive_reward
+		state = self.state_vector()
 		
 		done = not agent_alive
 		ob = self._get_obs()
@@ -42,10 +46,13 @@ class Hexapod2DofMoveForwardEnv(mujoco_env.MujocoEnv, EzPickle):
 		return ob, reward, done, dict(reward_forward=forward_reward,reward_ctrl=-ctrl_cost,reward_contact=-contact_cost,reward_survive=survive_reward)
 
 	def _get_obs(self):
-
+		#print("self.data.qpos" ,self.data.qpos[:7])
+		#print("self.data.qvel",self.data.qvel[:6])
+		#print("self.data.sensordata",self.data.sensordata)
 		return np.concatenate([
 			self.data.qpos.flat,  # 躯干的坐标和四元数 7  其他关节的角度 2*6= 12
 			self.data.qvel.flat[:6],  # 躯干的线速度 3 和 角速度 3  
+			#self.data.sensordata.flat, #躯干的线速度 3 和 角速度 3 
 			])
 
 	def reset_model(self):
@@ -53,6 +60,7 @@ class Hexapod2DofMoveForwardEnv(mujoco_env.MujocoEnv, EzPickle):
 		qvel = self.init_qvel + self.np_random.randn(self.model.nv) * .1
 		self.set_state(qpos, qvel)
 		return self._get_obs()
+
 	
 	def viewer_setup(self):
-		self.viewer.cam.distance = self.model.stat.extent * 0.5
+		self.viewer.cam.distance = self.model.stat.extent * 1.2

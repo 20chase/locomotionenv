@@ -5,20 +5,25 @@ import numpy as np
 
 import gym
 from gym.spaces import Tuple
+from gym import utils
 from gym.utils import EzPickle
 from gym.envs.mujoco import mujoco_env
 
 
-class Hexapod3DofMoveForwardEnv(mujoco_env.MujocoEnv, EzPickle):
+
+
+class Hexapod3DofMoveForwardEnv(mujoco_env.MujocoEnv, utils.EzPickle):
 	"""docstring for ClassName"""
 
 	def __init__(self):
-		EzPickle.__init__(self)
-		mujoco_env.MujocoEnv.__init__(self, "hexapod-3dof-moveforward.xml",4)
-		# self.viewer = None
+		utils.EzPickle.__init__(self)
+		xmlpath = os.path.join(os.path.dirname(__file__), "assets", "hexapod-3dof-moveforward.xml")
+		mujoco_env.MujocoEnv.__init__(self, xmlpath,4)
+		self.viewer = None
 
 
 	def _step(self, a):
+		
 		xposbefore = self.get_body_com("torso")[0]
 		self.do_simulation(a, self.frame_skip)
 		xposafter = self.get_body_com("torso")[0]
@@ -33,6 +38,7 @@ class Hexapod3DofMoveForwardEnv(mujoco_env.MujocoEnv, EzPickle):
 
 
 		reward = forward_reward - ctrl_cost - contact_cost + survive_reward
+		state = self.state_vector()
 		
 		done = not agent_alive
 		ob = self._get_obs()
@@ -51,6 +57,6 @@ class Hexapod3DofMoveForwardEnv(mujoco_env.MujocoEnv, EzPickle):
 		self.set_state(qpos, qvel)
 		return self._get_obs()
 
-
+	
 	def viewer_setup(self):
-		self.viewer.cam.distance = self.model.stat.extent * 0.5
+		self.viewer.cam.distance = self.model.stat.extent * 1.2

@@ -21,8 +21,9 @@
       <joint armature="0" damping="0" limited="false" margin="0.01" name="root" pos="0 0 0" type="free"/>
       <!--
       <site name="torso_site" size='0.05 0.05 0.05'/>
-    -->
       <site name="sensorsurf" pos="0 0.045 0" size=".03 .03 .03" type="ellipsoid" rgba="0.3 0.2 0.1 0.3"/>
+    -->
+      
     <!-- Back left leg -->
     <body name="back_left_leg" pos="0 0 0">
       <geom fromto="0 0 0 0.18 0.215 0" name="aux_1_geom" size="0.08" type="capsule"/>
@@ -113,9 +114,10 @@
     <motor ctrllimited="true" ctrlrange="-1.0 1.0" joint="hip_6" gear="150"/>
     <motor ctrllimited="true" ctrlrange="-1.0 1.0" joint="ankle_6" gear="150"/>
   </actuator>
-  
+  <!--
   <sensor>
     <velocimeter name='torso_velocimeter' site='sensorsurf'/>
     <gyro name='torso_gyro' site='sensorsurf'/>
   </sensor>
+-->
 </mujoco>
