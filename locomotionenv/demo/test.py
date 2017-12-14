@@ -12,6 +12,11 @@ import locomotionenv.envs
 def main():
 	env = gym.make("Hexapod-3Dof-MoveForward-v1")
 	#env = gym.make("Hexapod-2Dof-MoveForward-v1")
+	#env = gym.make("AntObstaclesBig-v1")
+	#env = gym.make("AntBandits-v1")
+	#env = gym.make("AntMovement-v1")
+	#env = gym.make("AntObstacles-v1")
+	#env = gym.make("AntObstaclesGen-v1")
 	print(env.env.observation_space)
 	print(env.env.action_space)
 	for i_episode in range(20):
