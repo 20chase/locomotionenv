@@ -52,4 +52,9 @@ register(
     max_episode_steps=1000,
 )
 
+register(
+    id='Hexapod-2Dof-MoveOverObstalces-Stairs-v1',
+    entry_point='locomotionenv.envs:Hexapod2DofMoveOverObstalcesStairsEnv',
+    max_episode_steps=4000,
+)
 
